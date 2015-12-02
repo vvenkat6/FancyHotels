@@ -3,7 +3,7 @@
 <?php
 include 'dbinfo.php' ;
 session_start();
-$id = $_SESSION['id'];
+$id = $_COOKIE['resnum'];
 
 mysql_connect($host,$username,$password) or die( "Unable to connect");;
 mysql_select_db($database) or die( "Unable to select database");

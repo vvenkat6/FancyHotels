@@ -24,23 +24,24 @@ input[type="checkbox"]{ vertical-align: top; }
 <center>
 MAKE A RESERVATION
 <br><br><br>
-
-<script>
-$(document).ready(function() {
-    $("input").click(function(event) {
-        var total = 0;
-        $("input:checked").each(function() {
-            total += parseInt($(this).val());
-        });
-        
-        if (total == 0) {
-            $('#total').val('');
-        }
-        else {
-            $('#total').val('$' + total);
-        }
-    });
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+//$(document).ready(function() {
+function myFunction(){
+$("tbody td").click(function(e) {
+var category = $(this).prev().prev().prev().prev().text();
+var extra = parseInt($(this).prev().text());
+var room = parseInt($(this).prev().prev().text());
+var sdate = readCookie('sdate');
+var edate = readCookie('edate');
+var days = Math.floor((edate-sdate)/(1000*24*60*60))
+var costr = {'Suite':250, 'Family':170,'Standard':100};
+var coste = {'Suite':150, 'Family':50, 'Standard':70};
+var total = (room+ extra) * days;
+var test = $(this).val();
+return extra;
 });
+}
 </script>
 
 <?php
@@ -74,7 +75,7 @@ if (mysql_num_rows($result) > 0) {
     echo "<form action='confirmR.php' method='post'>";
     while($row = mysql_fetch_assoc($result)) {
         echo "<tr><td>".$row["Room_num"]."</td><td>".$row["Room_category"]."</td><td>".$row["Num_of_people"]."</td><td>".$row["Cost_per_day"]."</td><td>".$row["Cost_extra_bed"]."</td>";
-        echo "<td><input type='checkbox' value=".$row["Room_num"]." name='Extra[]'></td></tr>";
+        echo "<td><input type='checkbox' onclick='myFunction(this)' value=".$row["Room_num"]." name='Extra[]'></td></tr>";
 	$cost = $cost+$row["Cost_per_day"];
     }
     $cost = $cost * $days;

@@ -11,7 +11,7 @@ input[type="checkbox"]{ vertical-align: top; }
 <center>
 UPDATE RESERVATION
 <br><br><br>
-<br><br><a href="Umenu.php">Back to main menu</a><br>
+
 <script>
 function myFunction() {
         alert("Clicked!");
@@ -43,25 +43,9 @@ $cardnum = $row['Card_Num'];
 $_SESSION['cardnum'] = $cardnum; 
 
 $query = "SELECT * from RESERVATION_HAS_ROOM WHERE ReservationID=$id";
-$result = mysql_query($query);
-$cost = 0;
-$row = mysql_fetch_array($result);
-$loc = $row['Location'];
-#print $loc;
-
-$query = "select Room_num from ROOM where Location='$loc' and Room_num not in(select RESERVATION_HAS_ROOM.Room_num from RESERVATION inner join RESERVATION_HAS_ROOM on RESERVATION.ReservationID = RESERVATION_HAS_ROOM.ReservationID where not Is_cancelled and RESERVATION_HAS_ROOM.Location='$loc' and ('$sdate' Between RESERVATION.Start_Date and RESERVATION.End_Date || '$edate' Between RESERVATION.Start_Date and RESERVATION.End_Date))";
-#echo $query;
-$result = mysql_query($query);
-$freeR = array();
-while($row = mysql_fetch_assoc($result)){
-	#print $row['Room_num'];
-	array_push($freeR,$row['Room_num']);
-}
-#print_r($freeR);
-
-
-$query = "SELECT * from RESERVATION_HAS_ROOM WHERE ReservationID=$id";
 $result = mysql_query($query)  or die(mysql_error());
+$cost = 0;
+
 if (mysql_num_rows($result) > 0) {
     echo "<table><tr><th>Room no</th><th>Room Category</th><th>#persons allowed</th><th>Cost/day</th><th>Cost of extra bed/day</th><th>Select Extra Bed</th></tr>";
     echo "<form action='uppu2.php' method='post'>";
@@ -69,12 +53,6 @@ if (mysql_num_rows($result) > 0) {
 	$rno = $row["Room_num"];
 	$location = $row["Location"];
 
-	if(in_array($rno,$freeR)){
-		echo "<br>";
-	}else{
-		die("These rooms are not free for these dates!Cannot continue with update!");
-	}
-	
 	$query = "select * from ROOM where Room_num=$rno and Location='$location'";
 	$result2 = mysql_query($query);
 	$row2 = mysql_fetch_assoc($result2);

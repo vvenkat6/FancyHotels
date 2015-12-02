@@ -1,3 +1,6 @@
+<?php
+setcookie('resnum',$_POST['resnum'],time()+3600);
+?>
 <html>
 <center>
 <br>
@@ -22,6 +25,7 @@ mysql_select_db($database) or die( "Unable to select database");
 $query = "SELECT * FROM RESERVATION WHERE ReservationID=$id";
 $result = mysql_query($query);
 $row = mysql_fetch_assoc($result);
+$is_cancel=$row['Is_cancelled'];
 
 if(mysql_num_rows($result) > 0){
 	echo "<br><br>Start date :". $row["Start_Date"]."<br>";
@@ -61,11 +65,18 @@ if ($days > 3){
 	echo "<h2>Cannot be cancelled!</h2>";
 }
 
+if($is_cancel==1){
+        echo "<br>This order has already been cancelled! Cannot proceed further!<br>";
+	$refund = 0;
+}
+
+
 echo "<br>Amount refunded: $refund<br>";
 
 echo "<form action=cancon.php method=POST>";
-if ($days>=0){
-echo "<input type='submit' value='Cancel'>";}
+if ($days>=0 && $is_cancel==0){
+	echo "<input type='submit' value='Cancel'>";
+}
 echo "</form>";
 
 $_SESSION['username'] = $user;
